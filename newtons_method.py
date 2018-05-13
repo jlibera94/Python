@@ -11,9 +11,10 @@ def f(x):
 def fprime(x):
     return -2*x + 10
 
-guess = -10
+#selecting initial guess
+intl_guess = -10
 
 for val in range(1,10):
-    nextGuess = guess -f(guess)/fprime(guess)
+    nextGuess = intl_guess -f(intl_guess)/fprime(intl_guess)
     print(nextGuess)
-    guess = nextGuess
+    intl_guess = nextGuess

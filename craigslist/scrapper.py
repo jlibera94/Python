@@ -41,11 +41,13 @@ for container in containers:
     if price_container:
        price = price_container[0].text
     
-    
-    span = container.find("span", {"class":"result-price"})
-    if span: 
-        container_print = span.string
-        container_print = container_print + 
+# =============================================================================
+#    
+#     span = container.find("span", {"class":"result-price"})
+#     if span: 
+#         container_print = span.string
+#        
+# =============================================================================
     
     print("title: " + title)
     print("price: " + price)

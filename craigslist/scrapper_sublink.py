@@ -66,8 +66,12 @@ while start < 100:
         with open(file_name, "a", encoding='UTF-8') as output_file:
             csv_writer = writer(output_file, delimeter=',')
             csv_writer.writerow([title, price, address])
-            
-    nextpageLink = soup.select('a[title="next page"]')[0]
+      
+    try:    
+        nextpageLink = soup.select('a[title="next page"]')[0]
+    except:
+        pass
+    
     url = 'https://montreal.craigslist.org/' + nextpageLink.get('href')
     res = requests.get(url)
     soup = bs4.BeautifulSoup(res.text, "html.parser")

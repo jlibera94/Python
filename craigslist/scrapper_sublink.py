@@ -12,13 +12,22 @@ from csv import writer
 import re
 
 def title_formatter(format_input):
+    format_input = format_input.replace("\n", "")
+    format_input = format_input.replace(",", " ") 
+    format_input = re.sub(r'\s+', ' ', format_input)
+    format_input = format_input.replace("\\\\", "\\") 
+    format_input = format_input.strip()
     return format_input
 
 def price_formatter(price):
+    price = price.replace(",", ".")
+    price = re.sub(r'\s+', '', price)
     price = price.replace("$","")
     return '$' + price.strip()
 
 def address_formatter(address):
+    address = address.replace(",", " ")
+    address = re.sub(r'\s+', ' ', address)
     return address
 
 def request_bs(url):
@@ -36,18 +45,18 @@ with open(file_name, 'w+') as output_file:
     
 soup = request_bs(url)
 
-informationDIV = soup.select('li result-row')
+informationDIV = soup.select('li .result-row')
 length = len(informationDIV)
 
 
-MAXIMUM = 100
+MAXIMUM = 119
 start = 0
-while start < 100:
-    number_of_articles = len(soup.select('li result row'))
+while start < 119:
+    number_of_articles = len(soup.select('li .result-row'))
     for i in range(len(informationDIV)):
         try:
             start = start + 1
-            titles = soup.select('li result-row > .result-title > a')
+            titles = soup.select('li .result-row > .result-title > a')
             
            #get titles
             title = title_formatter(titles[i].getText())
@@ -64,11 +73,14 @@ while start < 100:
             pass
         
         with open(file_name, "a", encoding='UTF-8') as output_file:
-            csv_writer = writer(output_file, delimeter=',')
+            csv_writer = writer(output_file, delimiter=',')
             csv_writer.writerow([title, price, address])
-            
-    nextpageLink = soup.select('a[title="next page"]')[0]
-    url = 'https://montreal.craigslist.org/' + nextpageLink.get('href')
+    try:        
+        nextpageLink = soup.select('a[title="next page"]')[0]
+    except:
+        pass
+    
+    url = 'https://montreal.craigslist.org/search/apa?s=120' + nextpageLink.get('href')
     res = requests.get(url)
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
